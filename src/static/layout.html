@@ -1,0 +1,31 @@
+{{ define "Index" }}
+<!DOCTYPE html>
+<html lang="en-US">
+    <head>
+        <title>Sample App Website</title>
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <h1>Sample App website for mysql</h1> 
+
+    {{ $length := len . }}
+    <h3>Length {{$length}}</h3> 
+
+    <table border="1">
+      <tr>
+        <td>Id</td>
+        <td>FirstName</td>
+        <td>Department</td>
+      </tr>
+    {{ range . }}
+      <tr>
+        <td>{{ .Id }}</td>
+        <td> {{ .Fname }} </td>
+        <td>{{ .Dname }} </td>
+      </tr>
+    {{ end }}
+    </table>
+
+    </body>
+</html>
+{{ end }}

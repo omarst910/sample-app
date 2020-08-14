@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample-app
+spec:
+  selector:
+    matchLabels:
+      app: sample-app
+  template:
+    metadata:
+      labels:
+        app: sample-app
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: central
+        image: sample-app:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+        env:
+          - name: DB_HOST
+            value: mysql.default
+          - name: DB_PORT
+            value: "3306"
+          - name: DB_USERNAME
+            value: root
+          - name: DB_PASSWORD
+            value: password
+          - name: DB_NAME
+            value: test
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-app
+  ports:
+  - name: tcp-sample-app
+    protocol: TCP
+    port: 80
+    targetPort: 8080
