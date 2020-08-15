@@ -72,3 +72,15 @@ This resource acts like a loadbalancer, as pods die and get rescheduled their IP
 You can also have multiple replicas of the pod fronted by a single service that will route the traffic to the healthy pods. In that case it acts like an internal load balancer.
 
 To read more about services and its different types, you can refer to this [link](https://kubernetes.io/docs/concepts/services-networking/service/) that has a lot more details.
+
+# Observability and Monitoring
+There are multiple ways for monitoring your applications running within the cluster the simplest one is using the `kubectl` commands. The following 2 commands help with debugging issues with the pods in the cluster:
+
+1. ```kubectl describe pods <POD-NAME>```: This command displays issues with starting the application such as failure to pull the image, missing secrets/config or connectivity issues with upstream dependencies
+
+2. ```kubectl logs <POD-NAME>```: This command will only work if the pod has started and the application ran or is running. It will display the standard output from the application itself which can be helpful in debugging issues.
+
+Other than running the `kubectl` commands there are some tools that help with monitoring and observability. With Minikube you can simply run `minikube dashboard` which will show you a GUI for the cluster and whats running on it including the state of each application. On a cloud platform the Kubernetes cluster would be integrated with managed services that would log all the events and provide monitoring/alerting by default.
+
+## Open source tooling
+There are a lot of open source tools that can be installed and configured on the cluster that would give you the required level of logging and monitoring needed. Some of these tools include [Promethues](https://prometheus.io/) for log scraping, [Grafana](https://grafana.com/) for visualisation of the cluster, [Kiali](https://kiali.io/) to visualise how the requests are sent between the pods and [Jaeger](https://www.jaegertracing.io/) that can be used for tracing and troubleshooting microservices-based distributed systems.
