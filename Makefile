@@ -17,15 +17,22 @@ build:
 	$(eval $(minikube -p minikube docker-env))
 	docker build . --tag sample-app
 
-## Deploy the K8s manifests to your cluster
-deploy: build
-	kubectl apply -f .k8s/db/
-	kubectl wait --for=condition=available --timeout=600s deployment --all
+## Deploy sample-app
+deploy-app: build
+	$(eval $(minikube -p minikube docker-env))
 	kubectl apply -f .k8s/app/
+
+## Deploy db
+deploy-db:
+	kubectl apply -f .k8s/db/
+
+## Deploy the K8s manifests to your cluster
+deploy: deploy-app deploy-db
+	kubectl rollout status statefulset/mysql
+	kubectl wait --for=condition=available --timeout=600s deployment --all
 
 ## Port forward the flast app
 serve: deploy
-	kubectl wait --for=condition=available --timeout=600s deployment --all
 	kubectl port-forward svc/sample-app-service 8080:80
 
 ## Cleanup the deployments

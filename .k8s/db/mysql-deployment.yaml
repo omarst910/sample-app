@@ -9,36 +9,55 @@ spec:
   selector:
     app: mysql
 ---
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
-metadata:
-  name: mysql
-  namespace: default
-spec:
-  selector:
-    matchLabels:
+  apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: mysql
+    namespace: default
+    labels:
       app: mysql
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
+  spec:
+    selector:
+      matchLabels:
         app: mysql
-    spec:
-      containers:
-      - image: mysql:5.7
-        name: mysql
-        env:
-          # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
-          value: password
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
+    serviceName: mysql
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          app: mysql
+      spec:
+        containers:
+        - name: mysql
+          image: mysql:5.7
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          ports:
+          - name: mysql
+            containerPort: 3306
+          volumeMounts:
+          - name: mysql-initdb
+            mountPath: /docker-entrypoint-initdb.d
+          - name: data
+            mountPath: /var/lib/mysql
+            subPath: mysql
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+        volumes:
+        - name: conf
+          emptyDir: {}
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-config
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 0.5Gi
