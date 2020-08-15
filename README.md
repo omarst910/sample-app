@@ -12,10 +12,7 @@ To run this example you will need the following installed and configured:
 After following the steps in the above links you will have a running minikube cluster on your machine.
 
 ## Steps
-1. To build and deploy the sample app with its MYSQL database run the following command, this will create 2 pods in your default namespace.
-```
-make deploy
-``` 
+1. To build and deploy the sample app with its MYSQL database run the following command, this will create 2 pods in your default namespace `make deploy`
 2. To deploy the app only you can run `make deploy-app`
 
 3. To deploy the DB by itself you can run `make deploy-db`
@@ -26,10 +23,8 @@ make deploy
 
 6. Go to `localhost:8080/view` and the content of the table will be displayed.
 
-7. To cleanup the stack run:
-```
-make cleanup
-```
+7. To cleanup the stack run: `make cleanup`
+
 
 # Connection between the dockerfiles and k8s manifests
 The dockerfiles are used package your application along with its dependancies. Once its packaged, the docker image is stored locally and can be viewed by running `docker images`. When you are running minikube you can refer to the docker image within the `Deployment` manifests as seen in our [sample-app](.k8s/app/app.yaml) on line 19. 
