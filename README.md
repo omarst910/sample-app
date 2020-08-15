@@ -16,28 +16,21 @@ After following the steps in the above links you will have a running minikube cl
 ```
 make deploy
 ``` 
-2. Find the name of the `mysql` pod by running `kubectl get po` and then run the following command to execute into the container. The password is `password`.
-```
-kubectl exec -it mysql-66b68bcc9b-l2sjk -- mysql -u root -p
-```
-3. Copy the content of [this file](.k8s/schema.sql) and then paste it in the terminal where you are executed in the mysql container.
+2. To deploy the app only you can run `make deploy-app`
 
-4. Once the SQL command are executed, you will see something like this in your logs 
-```
-Query OK, 1 row affected (0.01 sec)
-```
-5. Exit the mysql container by running `\q` and then run the following:
-```
-make serve
-```
-6. This will port forward the sample-app to your localhost so you can access it in the browser at `localhost:8080`
+3. To deploy the DB by itself you can run `make deploy-db`
 
-7. Go to `localhost:8080/view` and the content of the table will be displayed.
+4. To access the application on your browser run `make serve`
 
-8. To cleanup the stack run:
+5. This will port forward the sample-app to your localhost so you can access it in the browser at `localhost:8080`
+
+6. Go to `localhost:8080/view` and the content of the table will be displayed.
+
+7. To cleanup the stack run:
 ```
 make cleanup
 ```
+
 # Connection between the dockerfiles and k8s manifests
 The dockerfiles are used package your application along with its dependancies. Once its packaged, the docker image is stored locally and can be viewed by running `docker images`. When you are running minikube you can refer to the docker image within the `Deployment` manifests as seen in our [sample-app](.k8s/app/app.yaml) on line 19. 
 
