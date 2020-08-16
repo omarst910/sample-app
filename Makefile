@@ -47,6 +47,11 @@ serve: deploy
 cleanup:
 	kubectl delete -f .k8s/ -R
 
+## Delete minikube and startup with --vm=true option (for MacOS only)
+_enable-minikube-ingress:
+	minikube delete
+	minikube start --vm=true
+
 ## Prints help message
 help:
 	printf "\n${COLOR_YELLOW}${PROJECT}\n------\n${COLOR_RESET}"

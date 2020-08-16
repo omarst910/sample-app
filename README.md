@@ -32,6 +32,20 @@ After following the steps in the above links you will have a running minikube cl
 
 6. To cleanup the stack run: `make cleanup`
 
+# Creating the Cert secret
+Once a real Certificate and Key are provided by the DNS providor, you can create a secret from them that the ingress resource references using the following command. This will create a file called `sample-cert.yaml` which can be renamed to your requirements.
+
+```
+kubectl create secret tls sample-app-secret --cert=<CER.CRT> --key=<KEY.PEM> --dry-run -oyaml > sample-cert.yaml
+```
+
+The secret name, `sample-app-secret ` in this case is referenced in the [ingress file](.k8s/ingress/example-ingress.yaml) like this:
+```
+tls:
+- hosts:
+  - sampleapp.info
+  secretName: sample-app-secret
+```
 
 # Connection between the dockerfiles and k8s manifests
 The dockerfiles are used package your application along with its dependancies. Once its packaged, the docker image is stored locally and can be viewed by running `docker images`. When you are running minikube you can refer to the docker image within the `Deployment` manifests as seen in our [sample-app](.k8s/app/app.yaml) on line 19. 
