@@ -12,18 +12,25 @@ To run this example you will need the following installed and configured:
 After following the steps in the above links you will have a running minikube cluster on your machine.
 
 ## Steps
-1. To build and deploy the sample app with its MYSQL database run the following command, this will create 2 pods in your default namespace `make deploy`
+1. To build and deploy the sample app with its MYSQL database run the following command, this will create 2 pods in your default namespace along with the ingress resource: `make deploy`
+
 2. To deploy the app only you can run `make deploy-app`
 
 3. To deploy the DB by itself you can run `make deploy-db`
 
-4. To access the application on your browser run `make serve`
+4. There are 2 options to access the application:
+   - Using port-forwarding: To access the application on your browser run `make serve`. This will port forward the sample-app to your localhost so you can access it in the browser at `localhost:8080`
+   - Using nginx ingress controller: You will need to grab the Ingress Host name and IP address by running `kubectl get ingress` the result will look something like this:
+   
+   ```
+   NAME              CLASS    HOSTS            ADDRESS        PORTS     AGE
+   example-ingress   <none>   sampleapp.info   192.168.64.2   80, 443   34m
+   ```
+   You will need to modify your `/etc/hosts` next by adding the Address and Host shown above in the file. Navigate to `https://sampleapp.info` to view the page.
 
-5. This will port forward the sample-app to your localhost so you can access it in the browser at `localhost:8080`
+5. Go to `localhost:8080/view` or `https://sampleapp.info/view` and the content of the database table will be displayed.
 
-6. Go to `localhost:8080/view` and the content of the table will be displayed.
-
-7. To cleanup the stack run: `make cleanup`
+6. To cleanup the stack run: `make cleanup`
 
 
 # Connection between the dockerfiles and k8s manifests

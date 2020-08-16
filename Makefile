@@ -12,6 +12,10 @@ PROJECT := Sample App
 ## Installs a development environment
 install: deploy
 
+## Enable ingress resource on minikube
+_enable-ingress:
+	minikube addons enable ingress
+
 ## Build the sample-app image
 build:
 	$(eval $(minikube -p minikube docker-env))
@@ -26,8 +30,12 @@ deploy-app: build
 deploy-db:
 	kubectl apply -f .k8s/db/
 
+## Deploy Ingress resource and secret
+deploy-ingress: _enable-ingress
+	kubectl apply -f .k8s/ingress
+
 ## Deploy the K8s manifests to your cluster
-deploy: deploy-app deploy-db
+deploy: deploy-app deploy-db deploy-ingress
 	kubectl rollout status statefulset/mysql
 	kubectl wait --for=condition=available --timeout=600s deployment --all
 
