@@ -32,6 +32,11 @@ After following the steps in the above links you will have a running minikube cl
 
 6. To cleanup the stack run: `make cleanup`
 
+## Ingress controller
+With minikube Nginx is the default ingress controller. While in a Kubernetes cluster you can use whatever controller you like such as Traefic, Istio or anything else.
+
+If you run `kubectl get po -n kube-system` you will see a nginx pod running. That gets installed automatically when you run `minikube addons enable ingress`. So in the background nginx is doing the routing between your host `sampleapp.info` and your k8s service.
+
 # Creating the Cert secret
 Once a real Certificate and Key are provided by the DNS providor, you can create a secret from them that the ingress resource references using the following command. This will create a file called `sample-cert.yaml` which can be renamed to your requirements.
 
